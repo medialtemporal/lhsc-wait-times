@@ -1,2 +1,2 @@
 # LHSC Wait Times
-tracking the wait times at the London Health Sciences Centre emergency department
+Tracking the wait times at the London Health Sciences Centre's emergency departments (University Hospital and Victoria Hospital)
