@@ -1,5 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+import csv
+from datetime import date, datetime
+
 
 lhsc_site = requests.get('https://www.lhsc.on.ca/adult-ed/emergency-department-wait-times')
 
@@ -28,3 +31,28 @@ for item in p:
 print(f'London ER Wait Times\n'
       f'University Hospital: {wait_times[0][1]} (last update: {last_update[0][1]})\n'
       f'Victoria Hospital: {wait_times[1][1]} (last update: {last_update[1][1]})')
+
+
+# Clean up numbers for writing to csv
+today = str(date.today())
+
+in_time = datetime.strptime(last_update[0][1], "%I:%M %p")  # changing time from 12h to 24h
+out_time = datetime.strftime(in_time, "%H:%M")
+
+
+uh_string = ""
+for character in wait_times[0][1]:  # University Hospital
+    if character.isnumeric() or character == '.':
+        uh_string = uh_string + character
+
+
+vh_string = ""
+for character in wait_times[1][1]:  # Victoria Hospital
+    if character.isnumeric() or character == '.':
+        vh_string = vh_string + character
+
+
+# Writing update to csv file
+with open('data.csv', 'a') as file:
+    writer = csv.writer(file)
+    writer.writerow([today,out_time,uh_string,vh_string])
