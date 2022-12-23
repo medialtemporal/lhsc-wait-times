@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-from datetime import date, datetime
+from datetime import datetime, timezone, timedelta
 
 
 lhsc_site = requests.get('https://www.lhsc.on.ca/adult-ed/emergency-department-wait-times')
@@ -34,7 +34,11 @@ print(f'London ER Wait Times\n'
 
 
 # Clean up numbers for writing to csv
-today = str(date.today())
+
+timezone_offset = -5.0  # Eastern Standard Time (UTC-5:00)
+tzinfo = timezone(timedelta(hours=timezone_offset))
+today = datetime.now(tzinfo)
+today = today.strftime("%Y-%m-%d")
 
 in_time = datetime.strptime(last_update[0][1], "%I:%M %p")  # changing time from 12h to 24h
 out_time = datetime.strftime(in_time, "%H:%M")
